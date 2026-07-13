@@ -22,4 +22,4 @@ public class Admin extends BaseEntity {
 
 
 }
-
+// 테스트용 주석
