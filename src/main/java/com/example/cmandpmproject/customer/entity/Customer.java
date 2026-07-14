@@ -15,6 +15,21 @@ public class Customer extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false)
+    private String customerName;
+
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    public Customer(String customerName, String email, String password) {
+        this.customerName = customerName;
+        this.email = email;
+        this.password = password;
+    }
+
 
 
 
