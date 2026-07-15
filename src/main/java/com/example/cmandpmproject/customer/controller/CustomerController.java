@@ -1,7 +1,10 @@
 package com.example.cmandpmproject.customer.controller;
 
+import com.example.cmandpmproject.customer.dto.CustomerResponse;
+import com.example.cmandpmproject.customer.dto.CustomerUpdateRequest;
 import com.example.cmandpmproject.customer.entity.Customer;
 import com.example.cmandpmproject.customer.service.CustomerService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,15 +20,15 @@ public class CustomerController {
 
     // [고객 리스트 조회]
     @GetMapping
-    public ResponseEntity<List<Customer>> getCustomers() {
-        List<Customer> customers = customerService.getCustomers();
+    public ResponseEntity<List<CustomerResponse>> getCustomers() {
+        List<CustomerResponse> customers = customerService.getCustomers();
         return ResponseEntity.ok(customers);
     }
 
     // [고객 상세 조회]
     @GetMapping("/{customerId}")
-    public ResponseEntity<Customer> getCustomer(@PathVariable String customerId) {
-        Customer customer = customerService.getCustomer(customerId);
+    public ResponseEntity<CustomerResponse> getCustomer(@PathVariable String customerId) {
+        CustomerResponse customer = customerService.getCustomer(customerId);
         return ResponseEntity.ok(customer);
     }
 
@@ -33,9 +36,9 @@ public class CustomerController {
     @PutMapping("/{customerId}")
     public ResponseEntity<String> updateCustomer(
             @PathVariable String customerId,
-            @RequestBody Customer customer
+            @Valid @RequestBody CustomerUpdateRequest request
     ) {
-        customerService.updateCustomer(customerId, customer);
+        customerService.updateCustomer(customerId, request);
         return ResponseEntity.ok("고객 정보가 성공적으로 수정되었습니다.");
     }
 
