@@ -15,13 +15,24 @@ public class AuthService {
 
     private final AdminRepository adminRepository;
 
+    private void validateLoginAdmin(AuthLoginRequest request) {
+        if(request.getEmail() == null || request.getPassword() == null) {
+            throw new IllegalArgumentException("이메일 또는 비밀번호가 입력되지 않았습니다.");
+        }
+        if(request.getEmail().isBlank() || request.getPassword().isBlank()) {
+            throw new IllegalArgumentException("이메일 또는 비밀번호가 입력되지 않았습니다.");
+        }
+    }
+
     @Transactional(readOnly = true)
     public AuthSession login(AuthLoginRequest request) {
+        validateLoginAdmin(request);
+
         Admin admin = adminRepository.findByEmail(request.getEmail()).orElseThrow(
-                () -> new IllegalStateException("해당 유저가 없습니다.")
+                () -> new IllegalArgumentException("이메일 또는 비밀번호를 잘못 입력하셨습니다.")
         );
         if(!ObjectUtils.nullSafeEquals(admin.getPassword(), request.getPassword())) {
-            throw new IllegalStateException("비밀번호가 일치하지 않습니다.");
+            throw new IllegalArgumentException("이메일 또는 비밀번호를 잘못 입력하셨습니다.");
         }
         return new AuthSession(
                 admin.getId(),

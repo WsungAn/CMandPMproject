@@ -8,10 +8,7 @@ import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,9 +23,22 @@ public class AuthController {
             HttpSession httpSession
     ) {
         AuthSession authSession = authService.login(request);
-        httpSession.setAttribute("login", authSession);
+        httpSession.setAttribute("adminName", authSession);
         httpSession.setMaxInactiveInterval(12 * 60 * 60);
-        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse("로그인에 성공!"));
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse("정상적으로 로그인이 되었습니다."));
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<MessageResponse> logout(
+            @SessionAttribute(name = "adminName", required = false)
+            AuthSession authSession,
+            HttpSession httpSession
+    ) {
+        if (authSession == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        httpSession.invalidate();
+        return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse("정상적으로 로그아웃이 되었습니다."));
     }
 
 }
