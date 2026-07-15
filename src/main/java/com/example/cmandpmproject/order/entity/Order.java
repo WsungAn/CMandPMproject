@@ -9,6 +9,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.UUID;
+
 @Getter
 @Entity
 @Table(name = "orders")
@@ -17,6 +19,14 @@ public class Order extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(nullable = false)
+    private Integer quantity;
+    @Column(nullable = false)
+    private String orderNo;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus orderStatus = OrderStatus.PREPARING;
+    @Column(nullable = false)
+    private int totalPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admins_id",nullable = true)
@@ -30,9 +40,23 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "products_id", nullable = false)
     private Product product;
 
+    public Order(Integer quantity, Admin admin, Customer customer, Product product) {
+        this.quantity = quantity;
+        this.admin = admin;
+        this.customer = customer;
+        this.product = product;
+        this.totalPrice = calculateTotalPrice();
+    }
 
+    @PrePersist
+    public void generateOrderNo(){
+        if (orderNo == null){
+            this.orderNo = UUID.randomUUID().toString();
+        }
+    }
 
-    //필드 + 생성자 설정
-
+    public int calculateTotalPrice(){
+        return /*getProduct.getPrice() * */quantity;
+    }
 
 }
