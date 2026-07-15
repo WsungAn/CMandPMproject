@@ -14,12 +14,19 @@ public class Admin extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String email;
+    private String password;
+    private String role;
 
 
+    public Admin(String email, String password, String role) {
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
 
-    // 필드 + 생성자 설정!!
+
 
 
 
 }
-// 관리자 인증 테스트용 주석3
