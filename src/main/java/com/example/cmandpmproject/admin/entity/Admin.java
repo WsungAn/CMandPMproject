@@ -1,5 +1,6 @@
 package com.example.cmandpmproject.admin.entity;
 
+import com.example.cmandpmproject.admin.dto.AdminResponse;
 import com.example.cmandpmproject.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -43,7 +44,7 @@ public class Admin extends BaseEntity {
     @Column
     private LocalDateTime rejectedAt;
 
-    @Column(nullable = false, length = 150)
+    @Column(length = 150)
     private String rejectionReason;
 
 
@@ -65,7 +66,7 @@ public class Admin extends BaseEntity {
         this.approvedAt = LocalDateTime.now();
     }
     // 거부
-    public void reject(){
+    public void reject(String reason){
         this.status = "거부";
         this.rejectedAt = LocalDateTime.now();
         this.rejectionReason = reason;
@@ -78,7 +79,7 @@ public class Admin extends BaseEntity {
     public void changeRole(String newRole){
         this.role=newRole;
     }
-    //정보 수정
+    // 정보 수정
     public void updateInfo(String name, String email, String phonenumber){
         this.name = name;
         this.email = email;
@@ -88,6 +89,7 @@ public class Admin extends BaseEntity {
     public void changePassword(String newPassword){
         this.password = newPassword;
     }
+
 
 
 
