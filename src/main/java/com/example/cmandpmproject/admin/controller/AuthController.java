@@ -23,19 +23,19 @@ public class AuthController {
             HttpSession httpSession
     ) {
         AuthSession authSession = authService.login(request);
-        httpSession.setAttribute("adminName", authSession);
+        httpSession.setAttribute("adminSession", authSession);
         httpSession.setMaxInactiveInterval(12 * 60 * 60);
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse("정상적으로 로그인이 되었습니다."));
     }
 
     @PostMapping("/logout")
     public ResponseEntity<MessageResponse> logout(
-            @SessionAttribute(name = "adminName", required = false)
+            @SessionAttribute(name = "adminSession", required = false)
             AuthSession authSession,
             HttpSession httpSession
     ) {
         if (authSession == null) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("로그인이 필요합니다."));
         }
         httpSession.invalidate();
         return ResponseEntity.status(HttpStatus.OK).body(new MessageResponse("정상적으로 로그아웃이 되었습니다."));
