@@ -4,12 +4,17 @@ import com.example.cmandpmproject.admin.service.AdminService;
 import com.example.cmandpmproject.product.entity.Product;
 import com.example.cmandpmproject.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping
+@RequestMapping("/api/products")
 public class ProductController {
-    public ProductService productService;
+
+    private final ProductService productService;
+
+    @PostMapping
+    public ProductResponse createProduct(@RequestBody ProductCreateRequest request) {
+        return productService.createProduct(request);
+    }
 }
