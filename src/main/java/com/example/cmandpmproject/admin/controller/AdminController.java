@@ -1,6 +1,10 @@
 
 package com.example.cmandpmproject.admin.controller;
 
+import com.example.cmandpmproject.admin.dto.LoginRequest;
+import com.example.cmandpmproject.admin.dto.LoginResponse;
+import com.example.cmandpmproject.admin.dto.SignupRequest;
+import com.example.cmandpmproject.admin.dto.SignupResponse;
 import com.example.cmandpmproject.admin.dto.ChangePasswordRequest;
 import com.example.cmandpmproject.admin.dto.AdminResponse;
 import com.example.cmandpmproject.admin.dto.UpdateAdmin;
@@ -8,6 +12,10 @@ import com.example.cmandpmproject.admin.dto.UpdateAdminRequest;
 import com.example.cmandpmproject.admin.entity.Admin;
 import com.example.cmandpmproject.admin.service.AdminService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +27,21 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("api/users")
 public class AdminController {
+    public AdminService adminService;
+
+    @PostMapping("/signup")
+    public SignupResponse signup(@RequestBody SignupRequest request){
+
+        return adminService.signup(request);
+    }
+
+    @PostMapping("/login")
+    public LoginResponse login(@RequestBody LoginRequest request){
+
+        return adminService.login(request);
+    }
+
+}
     private final AdminService adminService;
 
     // 관리자 리스트 조회
@@ -108,7 +131,7 @@ public class AdminController {
         );
         return ResponseEntity.ok(response);
     }
-}
+
 
 
 

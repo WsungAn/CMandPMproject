@@ -47,6 +47,23 @@ public class Admin extends BaseEntity {
     @Column(length = 150)
     private String rejectionReason;
 
+    @Column(nullable = false, length = 50)
+    private String AdminName;
+
+
+
+
+
+    public Admin(String adminName, String email, String password) {
+        this.AdminName = getAdminName();
+        this.email = email;
+        this.password = password;
+    }
+
+
+
+
+
 
 
     // 필드 + 생성자 설정!!
