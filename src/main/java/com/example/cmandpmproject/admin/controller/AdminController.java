@@ -1,6 +1,3 @@
-
-package com.example.cmandpmproject.admin.controller;
-
 import com.example.cmandpmproject.admin.dto.LoginRequest;
 import com.example.cmandpmproject.admin.dto.LoginResponse;
 import com.example.cmandpmproject.admin.dto.SignupRequest;
@@ -9,7 +6,6 @@ import com.example.cmandpmproject.admin.dto.ChangePasswordRequest;
 import com.example.cmandpmproject.admin.dto.AdminResponse;
 import com.example.cmandpmproject.admin.dto.UpdateAdmin;
 import com.example.cmandpmproject.admin.dto.UpdateAdminRequest;
-import com.example.cmandpmproject.admin.entity.Admin;
 import com.example.cmandpmproject.admin.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,7 +22,7 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/users")
-public class AdminController {
+public class RegisterAdminController {
     public AdminService adminService;
 
     @PostMapping("/signup")
@@ -42,7 +38,7 @@ public class AdminController {
     }
 
 }
-    private final AdminService adminService;
+    private AdminService adminService;
 
     // 관리자 리스트 조회
     @GetMapping
@@ -131,7 +127,6 @@ public class AdminController {
         );
         return ResponseEntity.ok(response);
     }
-
 
 
 

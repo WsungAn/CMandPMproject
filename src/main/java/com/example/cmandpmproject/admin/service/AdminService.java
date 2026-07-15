@@ -7,14 +7,10 @@ import com.example.cmandpmproject.admin.dto.SignupResponse;
 import com.example.cmandpmproject.admin.entity.Admin;
 import com.example.cmandpmproject.admin.dto.AdminResponse;
 import com.example.cmandpmproject.admin.dto.UpdateAdmin;
-import com.example.cmandpmproject.admin.entity.Admin;
 import com.example.cmandpmproject.admin.repository.AdminRepository;
-import com.example.cmandpmproject.customer.entity.Customer;
-import com.example.cmandpmproject.customer.repository.CustomerRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -154,7 +150,7 @@ public class AdminService {
 
 
 
-    private final CustomerRepository customerRepository;
+
 
     @Transactional
     public SignupResponse signup(SignupRequest request) {
