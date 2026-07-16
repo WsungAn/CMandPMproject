@@ -30,10 +30,10 @@ public class Admin extends BaseEntity {
     private String phonenumber;
 
     @Column(nullable = false, length = 20)
-    private String role;
+    private AdminRole role;
 
     @Column(nullable = false, length = 20)
-    private String status;
+    private AdminStatus status;
 
     @Column
     private LocalDateTime approvedAt;
@@ -45,13 +45,13 @@ public class Admin extends BaseEntity {
     private String rejectionReason;
 
     // 생성자: 가입 신청 시 사용
-    public Admin(String name, String email, String password, String phonenumber, String role) {
+    public Admin(String name, String email, String password, String phonenumber, AdminRole role) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.phonenumber = phonenumber;
         this.role = role;
-        this.status = "승인대기";
+        this.status = AdminStatus.PENDING;
     }
 
     // 생성자: 간단한 회원가입 (signup용)
@@ -59,29 +59,29 @@ public class Admin extends BaseEntity {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.status = "승인대기";
+        this.status = AdminStatus.PENDING;
     }
 
     // 승인
     public void approve() {
-        this.status = "활성";
+        this.status = AdminStatus.ACTIVE;
         this.approvedAt = LocalDateTime.now();
     }
 
     // 거부
     public void reject(String reason) {
-        this.status = "거부";
+        this.status = AdminStatus.REJECTED;
         this.rejectedAt = LocalDateTime.now();
         this.rejectionReason = reason;
     }
 
     // 상태 변경
-    public void changeStatus(String newStatus) {
+    public void changeStatus(AdminStatus newStatus) {
         this.status = newStatus;
     }
 
     // 역할 변경
-    public void changeRole(String newRole) {
+    public void changeRole(AdminRole newRole) {
         this.role = newRole;
     }
 

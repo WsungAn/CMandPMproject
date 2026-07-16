@@ -1,6 +1,8 @@
 package com.example.cmandpmproject.admin.controller;
 
 import com.example.cmandpmproject.admin.dto.*;
+import com.example.cmandpmproject.admin.entity.AdminRole;
+import com.example.cmandpmproject.admin.entity.AdminStatus;
 import com.example.cmandpmproject.admin.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +16,11 @@ import java.util.List;
 @RequestMapping("/api/users")
 public class AdminController {
     private final AdminService adminService;
+
+    @PostMapping("/signup")
+    public SignupResponse signup(@RequestBody SignupRequest request){
+        return adminService.signup(request);
+    }
 
     // 관리자 리스트 조회
     @GetMapping
@@ -41,11 +48,44 @@ public class AdminController {
     // 관리자 역할 변경
     @PatchMapping("/{id}/role")
     public ResponseEntity<AdminResponse> changeRole(@PathVariable Long id, @RequestParam String newRole) {
-        AdminResponse adminResponse = adminService.changeRole(id, newRole);
+        AdminResponse adminResponse = adminService.changeRole(id, AdminRole.valueOf(newRole));
         return ResponseEntity.ok(adminResponse);
     }
 
+    // 관리자 상태 변경
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<AdminResponse> changeStatus(@PathVariable Long id, @RequestParam String newStatus) {
+        AdminResponse adminResponse = adminService.changeStatus(id, AdminStatus.valueOf(newStatus));
+        return ResponseEntity.ok(adminResponse);
+    }
 
+    // 관리자 삭제
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        adminService.delete(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // 관리자 승인
+    @PatchMapping("/{id}/approval")
+    public ResponseEntity<AdminResponse> approveAdmin(@PathVariable Long id) {
+        AdminResponse adminResponse = adminService.approveAdmin(id);
+        return ResponseEntity.ok(adminResponse);
+    }
+
+    // 관리자 거부
+    @PatchMapping("/{id}/reject")
+    public ResponseEntity<AdminResponse> rejectAdmin(@PathVariable Long id, @RequestParam String reason) {
+        AdminResponse adminResponse = adminService.rejectAdmin(id, reason);
+        return ResponseEntity.ok(adminResponse);
+    }
+
+    // 내 프로필 조회
+    @GetMapping("/me")
+    public ResponseEntity<AdminResponse> getMyprofile(@RequestParam Long userId) {
+        AdminResponse adminResponse = adminService.getMyprofile(userId);
+        return ResponseEntity.ok(adminResponse);
+    }
 
 
     // 내 프로필 수정
