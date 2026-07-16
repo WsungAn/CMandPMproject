@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/users")
@@ -44,40 +45,8 @@ public class AdminController {
         return ResponseEntity.ok(adminResponse);
     }
 
-    // 관리자 상태 변경
-    @PatchMapping("/{id}/status")
-    public ResponseEntity<AdminResponse> changeStatus(@PathVariable Long id, @RequestParam String newStatus) {
-        AdminResponse adminResponse = adminService.changeStatus(id, newStatus);
-        return ResponseEntity.ok(adminResponse);
-    }
 
-    // 관리자 삭제
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        adminService.delete(id);
-        return ResponseEntity.noContent().build();
-    }
 
-    // 관리자 승인
-    @PatchMapping("/{id}/approval")
-    public ResponseEntity<AdminResponse> approveAdmin(@PathVariable Long id) {
-        AdminResponse adminResponse = adminService.approveAdmin(id);
-        return ResponseEntity.ok(adminResponse);
-    }
-
-    // 관리자 거부
-    @PatchMapping("/{id}/reject")
-    public ResponseEntity<AdminResponse> rejectAdmin(@PathVariable Long id, @RequestParam String reason) {
-        AdminResponse adminResponse = adminService.rejectAdmin(id, reason);
-        return ResponseEntity.ok(adminResponse);
-    }
-
-    // 내 프로필 조회
-    @GetMapping("/me")
-    public ResponseEntity<AdminResponse> getMyprofile(@RequestParam Long userId) {
-        AdminResponse adminResponse = adminService.getMyprofile(userId);
-        return ResponseEntity.ok(adminResponse);
-    }
 
     // 내 프로필 수정
     @PutMapping("/me")

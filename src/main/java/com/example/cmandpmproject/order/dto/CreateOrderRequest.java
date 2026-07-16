@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 
 @Getter
 public class CreateOrderRequest {
-    private Long customerId;
+    private String customerId;
     private Long productId;
     private int quantity;
 }
