@@ -4,6 +4,7 @@ import com.example.cmandpmproject.admin.Config.PasswordEncoder;
 import com.example.cmandpmproject.admin.dto.AuthLoginRequest;
 import com.example.cmandpmproject.admin.dto.AuthSession;
 import com.example.cmandpmproject.admin.entity.Admin;
+import com.example.cmandpmproject.admin.entity.AdminStatus;
 import com.example.cmandpmproject.admin.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ public class AuthService {
 
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
+//    private final AdminStatus adminStatus;
 
     private void validateLoginAdmin(AuthLoginRequest request) {
         if(request.getEmail() == null || request.getPassword() == null) {
