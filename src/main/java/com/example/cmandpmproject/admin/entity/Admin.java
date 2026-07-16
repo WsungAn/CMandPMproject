@@ -1,15 +1,11 @@
 package com.example.cmandpmproject.admin.entity;
 
-import com.example.cmandpmproject.admin.dto.AdminResponse;
+
 import com.example.cmandpmproject.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -20,48 +16,51 @@ public class Admin extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable=false)
+    private String adminname;
 
 
 
     @Column(nullable = false, length = 50)
     private String name;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable=false,unique=true)
     private String email;
 
-    @Column(nullable = false, length = 150)
+    @Column(nullable=false)
     private String password;
 
-    @Column(nullable = false, length = 20)
-    private String phonenumber;
+    @Column(nullable=false)
+    private String phone;
 
-    @Column(nullable = false, length = 20)
-    private String role;
+    @Enumerated(EnumType.STRING)
+    private AdminRole role;
 
-    @Column(nullable = false, length = 20)
-    private String status;
+    @Enumerated(EnumType.STRING)
+    private AdminStatus status;
 
-    @Column
-    private LocalDateTime approvedAt;
+    public Admin(
+            String adminname,
+            String email,
+            String password,
+            String phone,
+            AdminRole role
+    ){
 
-    @Column
-    private LocalDateTime rejectedAt;
+        this.adminname=getAdminname();
+        this.email=email;
+        this.password=password;
+        this.phone=phone;
+        this.role=role;
 
-    @Column(length = 150)
-    private String rejectionReason;
-
-    @Column(nullable = false, length = 50)
-    private String AdminName;
-
-
-
-
-
-    public Admin(String adminName, String email, String password) {
-        this.AdminName = getAdminName();
-        this.email = email;
-        this.password = password;
+        // 기본값은 승인대기
+        this.status=AdminStatus.PENDING;
     }
+
+}
+
+
+
 
 
 
