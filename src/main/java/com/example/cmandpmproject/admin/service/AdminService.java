@@ -1,12 +1,7 @@
 package com.example.cmandpmproject.admin.service;
 
-import com.example.cmandpmproject.admin.dto.LoginRequest;
-import com.example.cmandpmproject.admin.dto.LoginResponse;
-import com.example.cmandpmproject.admin.dto.SignupRequest;
-import com.example.cmandpmproject.admin.dto.SignupResponse;
+import com.example.cmandpmproject.admin.dto.*;
 import com.example.cmandpmproject.admin.entity.Admin;
-import com.example.cmandpmproject.admin.dto.AdminResponse;
-import com.example.cmandpmproject.admin.dto.UpdateAdmin;
 import com.example.cmandpmproject.admin.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,11 +19,16 @@ public class AdminService {
 
 // 관리자 리스트 조회
     @Transactional(readOnly = true)
-    public List<AdminResponse> listAdmins() {
-        List<AdminResponse> responses = new ArrayList<>();
+    public List<AdminResponse> listAdmins(int page,int limit) {
         List<Admin> admins = adminRepository.findAll();
-        for (Admin admin : admins) {
-            responses.add(toResponse(admin));
+
+        // 페이징
+        int start = (page - 1 ) * limit;
+        int end = Math.min(start + limit, admins.size());
+
+        List<AdminResponse> responses = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            responses.add(toResponse(admins.get(i)));
         }
         return responses;
     }
@@ -144,52 +144,4 @@ public class AdminService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다." + id));
     }
-
-
-
-
-
-
-
-
-    @Transactional
-    public SignupResponse signup(SignupRequest request) {
-
-        if (adminRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new IllegalArgumentException("이미 가입된 이메일입니다.");
-        }
-
-        Admin admin = new Admin(
-                request.getAdminName(),
-                request.getEmail(),
-                request.getPassword()
-        );
-
-        Admin savedCustomer = adminRepository.save(admin);
-
-        return new SignupResponse(
-
-                savedCustomer.getId(),
-                savedCustomer.getAdminName()
-        );
-    }
-
-    @Transactional(readOnly = true)
-    public LoginResponse login(LoginRequest request) {
-
-        Admin admin= adminRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
-
-        if (!admin.getPassword().equals(request.getPassword())) {
-            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
-        }
-
-        return new LoginResponse(
-                admin.getId(),
-                admin.getAdminName()
-        );
-    }
-
-
-
 }
