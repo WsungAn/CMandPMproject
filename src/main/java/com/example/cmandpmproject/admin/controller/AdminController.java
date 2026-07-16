@@ -1,6 +1,8 @@
 package com.example.cmandpmproject.admin.controller;
 
 import com.example.cmandpmproject.admin.dto.*;
+import com.example.cmandpmproject.admin.entity.AdminRole;
+import com.example.cmandpmproject.admin.entity.AdminStatus;
 import com.example.cmandpmproject.admin.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

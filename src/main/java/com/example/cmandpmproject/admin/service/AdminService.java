@@ -1,14 +1,19 @@
 package com.example.cmandpmproject.admin.service;
 
+import com.example.cmandpmproject.admin.Config.PasswordEncoder;
 import com.example.cmandpmproject.admin.dto.*;
 import com.example.cmandpmproject.admin.entity.Admin;
+import com.example.cmandpmproject.admin.entity.AdminRole;
+import com.example.cmandpmproject.admin.entity.AdminStatus;
 import com.example.cmandpmproject.admin.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor

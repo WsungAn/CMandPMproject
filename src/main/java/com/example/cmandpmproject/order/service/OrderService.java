@@ -58,9 +58,7 @@ public class OrderService {
                 savedOrder.getId(),
                 savedOrder.getProduct().getId(),
                 savedOrder.getCustomer().getId(),
-                savedOrder.getAdmin() == null
-                        ? null
-                        : savedOrder.getAdmin().getId(),
+                savedOrder.getAdmin().getId(),
                 savedOrder.getQuantity(),
                 savedOrder.getTotalPrice(),
                 savedOrder.getOrderNo(),
@@ -112,9 +110,9 @@ public class OrderService {
                 order.getTotalPrice(),
                 order.getCreatedAt(),
                 order.getOrderStatus(),
-                admin == null ? null : admin.getId(),
-                admin == null ? null : admin.getEmail(),
-                admin == null ? null : admin.getRole()
+                admin.getId(),
+                admin.getEmail(),
+                admin.getRole().getValue()
         );
     }
 }
