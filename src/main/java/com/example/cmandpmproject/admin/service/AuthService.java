@@ -17,13 +17,12 @@ public class AuthService {
 
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
-//    private final AdminStatus adminStatus;
 
     private void validateLoginAdmin(AuthLoginRequest request) {
-        if(request.getEmail() == null || request.getPassword() == null) {
+        if (request.getEmail() == null || request.getPassword() == null) {
             throw new IllegalArgumentException("이메일 또는 비밀번호가 입력되지 않았습니다.");
         }
-        if(request.getEmail().isBlank() || request.getPassword().isBlank()) {
+        if (request.getEmail().isBlank() || request.getPassword().isBlank()) {
             throw new IllegalArgumentException("이메일 또는 비밀번호가 입력되지 않았습니다.");
         }
     }
@@ -35,17 +34,17 @@ public class AuthService {
         Admin admin = adminRepository.findByEmail(request.getEmail()).orElseThrow(
                 () -> new IllegalArgumentException("이메일 또는 비밀번호를 잘못 입력하셨습니다.")
         );
-        // TODO: PasswordEncoder 연결 후 교체
 
-         if(!passwordEncoder.matches(request.getPassword(), admin.getPassword())) {
-             throw new IllegalArgumentException("이메일 또는 비밀번호를 잘못 입력하셨습니다.");
-         }
+        if (!passwordEncoder.matches(request.getPassword(), admin.getPassword())) {
+            throw new IllegalArgumentException("이메일 또는 비밀번호를 잘못 입력하셨습니다.");
+        }
 
-        // TODO: AdminStatus(Enum) 연결 후 교체
-//        if(admin.getStatus() != AdminStatus.ACTIVE) {
-//            throw new IllegalArgumentException("로그인할 수 없는 계정입니다.");
-//        }
+        if (admin.getStatus() != AdminStatus.ACTIVE) {
+            throw new IllegalArgumentException("로그인할 수 없는 계정입니다.");
 
+
+
+        }
         return new AuthSession(
                 admin.getId(),
                 admin.getEmail(),
