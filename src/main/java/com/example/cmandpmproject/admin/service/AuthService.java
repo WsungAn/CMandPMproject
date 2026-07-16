@@ -31,9 +31,19 @@ public class AuthService {
         Admin admin = adminRepository.findByEmail(request.getEmail()).orElseThrow(
                 () -> new IllegalArgumentException("이메일 또는 비밀번호를 잘못 입력하셨습니다.")
         );
+        // TODO: PasswordEncoder 연결 후 교체
+//         if(!passwordEncoder.matches(request.getPassword(), admin.getPassword())) {
+//             throw new IllegalArgumentException("이메일 또는 비밀번호를 잘못 입력하셨습니다.");
+//         }
+
         if(!ObjectUtils.nullSafeEquals(admin.getPassword(), request.getPassword())) {
             throw new IllegalArgumentException("이메일 또는 비밀번호를 잘못 입력하셨습니다.");
         }
+        // TODO: AdminStatus(Enum) 연결 후 교체
+//        if(admin.getStatus() != AdminStatus.ACTIVE) {
+//            throw new IllegalArgumentException("로그인할 수 없는 계정입니다.");
+//        }
+
         return new AuthSession(
                 admin.getId(),
                 admin.getEmail(),

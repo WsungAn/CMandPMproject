@@ -7,9 +7,10 @@ import java.time.LocalDateTime;
 
 @Getter
 public class CreateOrderResponse {
+
     private final Long id;
     private final Long productId;
-    private final Long customerId;
+    private final String customerId;
     private final Long adminId;
     private final int quantity;
     private final int totalPrice;
@@ -18,7 +19,18 @@ public class CreateOrderResponse {
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
 
-    public CreateOrderResponse(Long id, Long productId, Long customerId, Long adminId, int quantity, int totalPrice, String orderNo, OrderStatus orderStatus, LocalDateTime createdAt, LocalDateTime modifiedAt) {
+    public CreateOrderResponse(
+            Long id,
+            Long productId,
+            String customerId,
+            Long adminId,
+            int quantity,
+            int totalPrice,
+            String orderNo,
+            OrderStatus orderStatus,
+            LocalDateTime createdAt,
+            LocalDateTime modifiedAt
+    ) {
         this.id = id;
         this.productId = productId;
         this.customerId = customerId;

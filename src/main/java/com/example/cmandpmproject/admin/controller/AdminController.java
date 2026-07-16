@@ -27,22 +27,21 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("api/users")
 public class AdminController {
-    public AdminService adminService;
+
+    private final AdminService adminService;
 
     @PostMapping("/signup")
-    public SignupResponse signup(@RequestBody SignupRequest request){
+    public SignupResponse signup(@RequestBody SignupRequest request) {
 
         return adminService.signup(request);
     }
 
     @PostMapping("/login")
-    public LoginResponse login(@RequestBody LoginRequest request){
+    public LoginResponse login(@RequestBody LoginRequest request) {
 
         return adminService.login(request);
     }
 
-}
-    private final AdminService adminService;
 
     // 관리자 리스트 조회
     @GetMapping
@@ -131,6 +130,7 @@ public class AdminController {
         );
         return ResponseEntity.ok(response);
     }
+}
 
 
 

@@ -8,41 +8,42 @@ import com.example.cmandpmproject.order.dto.*;
 import com.example.cmandpmproject.order.entity.Order;
 import com.example.cmandpmproject.order.repository.OrderRepository;
 import com.example.cmandpmproject.product.entity.Product;
+import com.example.cmandpmproject.product.entity.ProductStatus;
 import com.example.cmandpmproject.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class OrderService {
-    public OrderRepository orderRepository;
-    public CustomerRepository customerRepository;
-    public AdminRepository adminRepository;
-    public ProductRepository productRepository;
+
+    private final OrderRepository orderRepository;
+    private final CustomerRepository customerRepository;
+    private final AdminRepository adminRepository;
+    private final ProductRepository productRepository;
 
     @Transactional
     public CreateOrderResponse save(CreateOrderRequest request) {
 
+        // TODO: 인증 기능과 연결 후 로그인 관리자 사용
         Admin admin = null;
 
-        Customer customer = customerRepository.findById(request.getCustomerId()).orElseThrow(
-                () -> new IllegalStateException("해당 고객은 없는 고객입니다.")
-        );
+        Customer customer = customerRepository.findById(request.getCustomerId())
+                .orElseThrow(() ->
+                        new IllegalStateException("해당 고객은 없는 고객입니다.")
+                );
 
-        Product product = productRepository.findById(request.getProductId()).orElseThrow(
-                () -> new IllegalStateException("해당 상품은 없는 상품입니다.")
-        );
+        Product product = productRepository.findById(request.getProductId())
+                .orElseThrow(() ->
+                        new IllegalStateException("해당 상품은 없는 상품입니다.")
+                );
 
-        //상품상세확인
-
-
-        //수량확인
-//        product.validateOrderable();
-//        if (product.getStatus() == ProductStatus.ON_SALE){
-
-        //재고차감
-//        product.decreaseStock(request.getQuantity());
+        // TODO: 상품 담당자가 아래 메서드를 완성하면 연결
+        // product.validateOrderable();
+        // product.decreaseStock(request.getQuantity());
 
         Order order = new Order(
                 request.getQuantity(),
@@ -57,7 +58,9 @@ public class OrderService {
                 savedOrder.getId(),
                 savedOrder.getProduct().getId(),
                 savedOrder.getCustomer().getId(),
-                savedOrder.getAdmin().getId(),
+                savedOrder.getAdmin() == null
+                        ? null
+                        : savedOrder.getAdmin().getId(),
                 savedOrder.getQuantity(),
                 savedOrder.getTotalPrice(),
                 savedOrder.getOrderNo(),
@@ -67,46 +70,51 @@ public class OrderService {
         );
     }
 
-//    @Transactional(readOnly = true)
-//    public List<GetAllOrderResponse> getOrders(OrderSearchCondition condition) {
-//        List<Order> orders = orderRepository.findAllByOrderNoOrCustomer(condition.getOrderNo(),condition.getCustomerId()).orElseThrow(
-//                () -> new IllegalStateException("없는 주문번호입니다.")
-//        );
-//        return orders.stream()
-//                .map(order -> new GetAllOrderResponse(
-//                        order.getId(),
-//                        order.getCustomer().getId(),
-//                        order.getCustomer().getEmail(),
-//                        order.getOrderNo(),
-//                        order.getProduct().getId(),
-//                        order.getQuantity(),
-//                        order.getTotalPrice(),
-//                        order.getCreatedAt(),
-//                        order.getOrderStatus(),
-//                        order.getAdmin()
-//                )).toList();
-//    }
-//
-//    @Transactional(readOnly = true)
-//    public GetOrderResponse getOrder(Long orderId) {
-//        Order order = orderRepository.findById(orderId).orElseThrow(
-//                () -> new IllegalStateException("없는 주문정보입니다.")
-//        );
-////        [추가]CS 주문이 아닌 고객의 직접 주문인 경우 등록 관리자 정보는 없습니다.
-//        return new GetOrderResponse(
-//                order.getId(),
-//                order.getOrderNo(),
-//                order.getCustomer().getId(),
-//                order.getCustomer().getEmail(),
-//                order.getProduct().getId(),
-//                order.getQuantity(),
-//                order.getTotalPrice(),
-//                order.getCreatedAt(),
-//                order.getOrderStatus(),
-//                order.getAdmin().getId(),
-//                order.getAdmin().getEmail(),
-//                order.getAdmin().getRole()
-//        );
-//    }
+    @Transactional(readOnly = true)
+    public List<GetAllOrderResponse> getOrders(
+            OrderSearchCondition condition
+    ) {
+        List<Order> orders = orderRepository.findAll();
 
+        return orders.stream()
+                .map(order -> new GetAllOrderResponse(
+                        order.getId(),
+                        order.getCustomer().getId(),
+                        order.getCustomer().getEmail(),
+                        order.getOrderNo(),
+                        order.getProduct().getId(),
+                        order.getQuantity(),
+                        order.getTotalPrice(),
+                        order.getCreatedAt(),
+                        order.getOrderStatus(),
+                        order.getAdmin()
+                ))
+                .toList();
+    }
+
+    @Transactional(readOnly = true)
+    public GetOrderResponse getOrder(Long orderId) {
+
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() ->
+                        new IllegalStateException("없는 주문정보입니다.")
+                );
+
+        Admin admin = order.getAdmin();
+
+        return new GetOrderResponse(
+                order.getId(),
+                order.getOrderNo(),
+                order.getCustomer().getId(),
+                order.getCustomer().getEmail(),
+                order.getProduct().getId(),
+                order.getQuantity(),
+                order.getTotalPrice(),
+                order.getCreatedAt(),
+                order.getOrderStatus(),
+                admin == null ? null : admin.getId(),
+                admin == null ? null : admin.getEmail(),
+                admin == null ? null : admin.getRole()
+        );
+    }
 }
