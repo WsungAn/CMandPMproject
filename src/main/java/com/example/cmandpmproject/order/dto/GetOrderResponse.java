@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 public class GetOrderResponse {
     private final Long id;
     private final String orderNo;
-    private final Long customerId;
+    private final String customerId;
     private final String customerEmail;
     private final Long productId;
     private final Integer quantity;
@@ -24,7 +24,7 @@ public class GetOrderResponse {
     private final String adminRole;
 
 
-    public GetOrderResponse(Long id, String orderNo, Long customerId, String customerEmail, Long productId, Integer quantity, Integer totalPrice, LocalDateTime createdAt, OrderStatus orderStatus, Long adminId, String adminEmail, String adminRole) {
+    public GetOrderResponse(Long id, String orderNo, String customerId, String customerEmail, Long productId, Integer quantity, Integer totalPrice, LocalDateTime createdAt, OrderStatus orderStatus, Long adminId, String adminEmail, String adminRole) {
         this.id = id;
         this.orderNo = orderNo;
         this.customerId = customerId;

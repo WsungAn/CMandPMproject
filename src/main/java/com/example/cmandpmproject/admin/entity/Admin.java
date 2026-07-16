@@ -20,10 +20,10 @@ public class Admin extends BaseEntity {
     @Column(nullable = false, length = 50)
     private String name;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, length = 150)
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false, length = 20)
