@@ -2,6 +2,7 @@ package com.example.cmandpmproject.product.entity;
 
 import com.example.cmandpmproject.common.BaseEntity;
 import jakarta.persistence.*;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
