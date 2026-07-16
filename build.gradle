@@ -36,3 +36,6 @@ dependencies {
 tasks.named('test') {
     useJUnitPlatform()
 }
+dependencies {
+    implementation("at.favre.lib:bcrypt:0.10.2")
+}
