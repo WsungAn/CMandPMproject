@@ -14,8 +14,35 @@ import org.springframework.web.server.ResponseStatusException;
 @RequiredArgsConstructor
 public class AdminService {
     private final AdminRepository adminRepository;
-    private final PasswordEncoder passwordEncoder;
+    @Transactional
+    public SignupResponse signup(SignupRequest request) {
+        if (adminRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("이미 가입된 이메일입니다.");
+        }
+        Admin admin = new Admin(
+                request.getAdminName(),
+                request.getEmail(),
+                request.getPassword()
+        );
+        Admin savedCustomer = adminRepository.save(admin);
+        return new SignupResponse(
+                savedCustomer.getId(),
+                savedCustomer.getAdminName()
+        );
+    }
 
+    @Transactional(readOnly = true)
+    public LoginResponse login(LoginRequest request) {
+        Admin admin= adminRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 이메일입니다."));
+        if (!admin.getPassword().equals(request.getPassword())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+        }
+        return new LoginResponse(
+                admin.getId(),
+                admin.getAdminName()
+        );
+    }
 // 관리자 리스트 조회
     @Transactional(readOnly = true)
     public List<AdminResponse> listAdmins(int page,int limit) {
