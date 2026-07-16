@@ -1,15 +1,9 @@
-
 package com.example.cmandpmproject.admin.controller;
-import com.example.cmandpmproject.admin.dto.SignupRequest;
-import com.example.cmandpmproject.admin.dto.SignupResponse;
 
+import com.example.cmandpmproject.admin.dto.*;
 import com.example.cmandpmproject.admin.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,30 +11,16 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admins")
+@RequestMapping("/api/users")
 public class AdminController {
-
-
     private final AdminService adminService;
-
-    @PostMapping("/signup")
-    public SignupResponse signup(@RequestBody SignupRequest request) {
-
-        return adminService.signup(request);
-    }
-
-
-    @PostMapping("/login")
-    public LoginResponse login(@RequestBody LoginRequest request) {
-
-        return adminService.login(request);
-    }
-
 
     // 관리자 리스트 조회
     @GetMapping
-    public ResponseEntity<List<AdminResponse>> listAdmins() {
-        List<AdminResponse> responseList = adminService.listAdmins();
+    public ResponseEntity<List<AdminResponse>> listAdmins(
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "10") int limit) {
+        List<AdminResponse> responseList = adminService.listAdmins(page, limit);
         return ResponseEntity.ok(responseList);
     }
 
@@ -51,27 +31,36 @@ public class AdminController {
         return ResponseEntity.ok(adminResponse);
     }
 
-
-
-
-
-    //URL에 {myId} 없음, 로그인된 사용자 ID는 Security Context에서 가져오기????
-    //내 프로필 수정
-    @PutMapping("/me")
-    public ResponseEntity<AdminResponse> updateMyprofile(
-            @RequestBody UpdateAdminRequest request) {
-        AdminResponse adminResponse = adminService.updateMyprofile(
-                request.getUserId(),
-                new UpdateAdmin(request.getName(),
-                        request.getEmail(),
-                        request.getPhonenumber()));
+    // 관리자 정보 수정
+    @PutMapping("/{id}")
+    public ResponseEntity<AdminResponse> updateInfo(@PathVariable Long id, @RequestBody UpdateAdmin updateAdmin) {
+        AdminResponse adminResponse = adminService.updateInfo(id, updateAdmin);
         return ResponseEntity.ok(adminResponse);
     }
 
-    //비밀번호 변경
+    // 관리자 역할 변경
+    @PatchMapping("/{id}/role")
+    public ResponseEntity<AdminResponse> changeRole(@PathVariable Long id, @RequestParam String newRole) {
+        AdminResponse adminResponse = adminService.changeRole(id, newRole);
+        return ResponseEntity.ok(adminResponse);
+    }
+
+
+
+
+    // 내 프로필 수정
+    @PutMapping("/me")
+    public ResponseEntity<AdminResponse> updateMyprofile(@RequestBody UpdateAdminRequest request) {
+        AdminResponse adminResponse = adminService.updateMyprofile(
+                request.getUserId(),
+                new UpdateAdmin(request.getName(), request.getEmail(), request.getPhonenumber())
+        );
+        return ResponseEntity.ok(adminResponse);
+    }
+
+    // 비밀번호 변경
     @PutMapping("/auth/password")
     public ResponseEntity<AdminResponse> changePassword(@RequestBody ChangePasswordRequest request) {
-
         AdminResponse response = adminService.changePassword(
                 request.getUserId(),
                 request.getOldPassword(),
@@ -80,7 +69,3 @@ public class AdminController {
         return ResponseEntity.ok(response);
     }
 }
-
-
-
-

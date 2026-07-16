@@ -1,6 +1,5 @@
 package com.example.cmandpmproject.admin.entity;
 
-
 import com.example.cmandpmproject.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -18,10 +17,6 @@ public class Admin extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String adminname;
-
-
     @Column(nullable = false, length = 50)
     private String name;
 
@@ -31,41 +26,39 @@ public class Admin extends BaseEntity {
     @Column(nullable = false)
     private String password;
 
-    @Column(nullable = false)
-    private String phone;
+    @Column(nullable = false, length = 20)
+    private String phonenumber;
 
-    @Enumerated(EnumType.STRING)
-    private AdminRole role;
+    @Column(nullable = false, length = 20)
+    private String role;
 
-    @Enumerated(EnumType.STRING)
-    private AdminStatus status;
+    @Column(nullable = false, length = 20)
+    private String status;
 
-    public Admin(
-            String adminname,
-            String email,
-            String password,
-            String phone,
-            AdminRole role
-    ) {
+    @Column
+    private LocalDateTime approvedAt;
 
-        this.adminname = getAdminname();
-        this.email = email;
-        this.password = password;
-        this.phone = phone;
-        this.role = role;
+    @Column
+    private LocalDateTime rejectedAt;
 
-        // 기본값은 승인대기
-        this.status = AdminStatus.PENDING;
-    }
+    @Column(length = 150)
+    private String rejectionReason;
 
-
-    public Admin(String name, String email, String password, String phonenumber,
-                 String role, String status) {
+    // 생성자: 가입 신청 시 사용
+    public Admin(String name, String email, String password, String phonenumber, String role) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.phonenumber = phonenumber;
         this.role = role;
+        this.status = "승인대기";
+    }
+
+    // 생성자: 간단한 회원가입 (signup용)
+    public Admin(String name, String email, String password) {
+        this.name = name;
+        this.email = email;
+        this.password = password;
         this.status = "승인대기";
     }
 
@@ -99,14 +92,13 @@ public class Admin extends BaseEntity {
         this.phonenumber = phonenumber;
     }
 
-    //비밀 번호 수정
+    // 비밀번호 수정
     public void changePassword(String newPassword) {
         this.password = newPassword;
     }
 
-
+    // signup/login에서 필요한 메서드
+    public String getAdminName() {
+        return this.name;
+    }
 }
-
-
-
-

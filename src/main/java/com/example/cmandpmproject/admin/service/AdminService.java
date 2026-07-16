@@ -1,13 +1,12 @@
 package com.example.cmandpmproject.admin.service;
 
-import com.example.cmandpmproject.admin.Config.PasswordEncoder;
-import com.example.cmandpmproject.admin.dto.SignupRequest;
-import com.example.cmandpmproject.admin.dto.SignupResponse;
+import com.example.cmandpmproject.admin.dto.*;
 import com.example.cmandpmproject.admin.entity.Admin;
 import com.example.cmandpmproject.admin.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 
 
@@ -17,6 +16,53 @@ public class AdminService {
     private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
 
+// 관리자 리스트 조회
+    @Transactional(readOnly = true)
+    public List<AdminResponse> listAdmins(int page,int limit) {
+        List<Admin> admins = adminRepository.findAll();
+
+        // 페이징
+        int start = (page - 1 ) * limit;
+        int end = Math.min(start + limit, admins.size());
+
+        List<AdminResponse> responses = new ArrayList<>();
+        for (int i = start; i < end; i++) {
+            responses.add(toResponse(admins.get(i)));
+        }
+        return responses;
+    }
+
+// 관리자 리스트 상세 조회
+    @Transactional(readOnly = true)
+    public AdminResponse getAdminDetail(Long id) {
+        Admin admin = getOrThrow(id);
+        return toResponse(admin);
+    }
+
+
+    //관리자 정보 수정
+    @Transactional
+    public AdminResponse updateInfo(Long id, UpdateAdmin updateAdmin) {
+        Admin admin = getOrThrow(id);
+
+        admin.updateInfo(
+                updateAdmin.getName(),
+                updateAdmin.getEmail(),
+                updateAdmin.getPhonenumber()
+        );
+        adminRepository.save(admin);
+        return toResponse(admin);
+    }
+
+    //관리자 역할 변경
+    @Transactional
+    public AdminResponse changeRole(Long id, String newRole) {
+        Admin admin = getOrThrow(id);
+        admin.changeRole(newRole);
+        adminRepository.save(admin);
+        return toResponse(admin);
+    }
+    //관리자 상태 변경
     @Transactional
     public SignupResponse signup(SignupRequest request){
 
@@ -25,58 +71,29 @@ public class AdminService {
             throw new IllegalArgumentException("이미 가입된 이메일입니다.");
         }
 
-        // 이메일 형식 검사
-        if(!request.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")){
-            throw new IllegalArgumentException("이메일 형식이 올바르지 않습니다.");
-        }
-
-        // 비밀번호 길이 검사
-        if(request.getPassword().length()<8){
-            throw new IllegalArgumentException("비밀번호는 8자 이상이어야 합니다.");
-        }
-
-        // 전화번호 형식 검사
-        if(!request.getPhone().matches("^010-\\d{4}-\\d{4}$")){
-            throw new IllegalArgumentException("전화번호 형식이 올바르지 않습니다.");
-        }
-
-        // 이름 검사
-        if(request.getAdminName()==null || request.getAdminName().isBlank()){
-            throw new IllegalArgumentException("이름은 필수입니다.");
-        }
-
-        // 역할 검사
-        if(request.getRole()==null){
-            throw new IllegalArgumentException("역할을 선택하세요.");
-        }
-
-        Admin admin = new Admin(
-
-                request.getAdminName(),
-
-                request.getEmail(),
-
-                // 암호화
-                passwordEncoder.encode(request.getPassword()),
-
-                request.getPhone(),
-
-                request.getRole()
+        admin.changePassword(newPassword);
+        adminRepository.save(admin);
+        return toResponse(admin);
+    }
+    private AdminResponse toResponse(Admin admin){
+        return new AdminResponse(
+                admin.getId(),
+                admin.getName(),
+                admin.getEmail(),
+                admin.getPhonenumber(),
+                admin.getRole(),
+                admin.getStatus(),
+                admin.getCreatedAt(),
+                admin.getApprovedAt(),
+                admin.getRejectedAt(),
+                admin.getRejectionReason()
         );
-
-        Admin savedAdmin = adminRepository.save(admin);
-
-        return new SignupResponse(
-
-                savedAdmin.getId(),
-
-                savedAdmin.getAdminname(),
-
-                savedAdmin.getStatus()
-        );
-
     }
 
+    // 내부 공통 매서드
+    private Admin getOrThrow(Long id) {
+        return adminRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다." + id));
+    }
 }
-
-
