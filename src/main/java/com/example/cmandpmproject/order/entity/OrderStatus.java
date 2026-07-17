@@ -11,8 +11,15 @@ public enum OrderStatus {
 
     String value;
 
-    OrderStatus(String value){
+    OrderStatus(String value) {
         this.value = value;
     }
 
+    public boolean canTransitionTo(OrderStatus nextStatus) {
+        return switch (this) {
+            case PREPARING -> nextStatus == SHIPPING;
+            case SHIPPING -> nextStatus == DELIVERED;
+            default -> false;
+        };
+    }
 }

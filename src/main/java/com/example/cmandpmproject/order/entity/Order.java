@@ -25,6 +25,7 @@ public class Order extends BaseEntity {
     private String orderNo;
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus = OrderStatus.PREPARING;
+
     @Column(nullable = false)
     private int totalPrice;
 
@@ -39,6 +40,9 @@ public class Order extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "products_id", nullable = false)
     private Product product;
+
+    @Column(length = 255)
+    private String cancelReason;
 
     public Order(Integer quantity, Admin admin, Customer customer, Product product) {
         this.quantity = quantity;
@@ -59,4 +63,12 @@ public class Order extends BaseEntity {
         return /*getProduct.getPrice() * */quantity;
     }
 
+    public void changeStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public void cancel(String cancelReason) {
+        this.orderStatus = OrderStatus.CANCELED;
+        this.cancelReason = cancelReason;
+    }
 }

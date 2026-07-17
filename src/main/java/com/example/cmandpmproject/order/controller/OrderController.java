@@ -1,8 +1,9 @@
 package com.example.cmandpmproject.order.controller;
 
-import com.example.cmandpmproject.customer.entity.Customer;
 import com.example.cmandpmproject.order.dto.*;
+import com.example.cmandpmproject.order.entity.OrderStatus;
 import com.example.cmandpmproject.order.service.OrderService;
+import com.example.cmandpmproject.product.entity.Product;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,53 +14,40 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api")
+@RequestMapping("/api/orders")
 public class OrderController {
-
     private final OrderService orderService;
 
-    @PostMapping("/orders")
+    @PostMapping
     public ResponseEntity<CreateOrderResponse> create(
-            @Valid @RequestBody CreateOrderRequest request
-    ) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(orderService.save(request));
+            @Valid @RequestBody CreateOrderRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.save(request));
     }
 
-    @GetMapping("/orders")
+    @GetMapping
     public ResponseEntity<List<GetAllOrderResponse>> getOrders(
-            @ModelAttribute OrderSearchCondition condition
-    ) {
+            @ModelAttribute OrderSearchCondition condition) {
         return ResponseEntity.ok(orderService.getOrders(condition));
     }
 
-    @GetMapping("/orders/{orderId}")
-    public ResponseEntity<GetOrderResponse> getOrder(
-            @PathVariable Long orderId
-    ) {
+    @GetMapping("/{orderId}")
+    public ResponseEntity<GetOrderResponse> getOrder(@PathVariable Long orderId) {
         return ResponseEntity.ok(orderService.getOrder(orderId));
     }
 
-    // TODO: 주문 담당자가 UpdateOrderRequest와 상태 변경 Service를 완성한 후 연결
-    /*
-    @PatchMapping("/orders/{orderId}/status")
-    public ResponseEntity<UpdateOrderResponse> update(
+    @PatchMapping("/{orderId}/status")
+    public ResponseEntity<Void> update(
             @PathVariable Long orderId,
-            @RequestBody UpdateOrderRequest request
-    ) {
-        return ResponseEntity.ok(orderService.update(orderId, request));
-    }
-    */
-
-    // TODO: 주문 담당자가 주문 취소 기능을 완성한 후 연결
-    /*
-    @DeleteMapping("/orders/{orderId}")
-    public ResponseEntity<Void> delete(
-            @PathVariable Long orderId,
-            @RequestBody DeleteOrderRequest request
-    ) {
-        orderService.delete(orderId, request);
+            @RequestBody UpdateOrderStatusRequest request) {
+        orderService.update(orderId, request.getStatus());
         return ResponseEntity.noContent().build();
     }
-    */
+
+    @PatchMapping("/{orderId}/cancel")
+    public ResponseEntity<Void> cancelOrder(
+            @PathVariable Long orderId,
+            @Valid @RequestBody CancelOrderRequest request) {
+        orderService.cancelOrder(orderId, request.getCancelReason());
+        return ResponseEntity.noContent().build();
+    }
 }
