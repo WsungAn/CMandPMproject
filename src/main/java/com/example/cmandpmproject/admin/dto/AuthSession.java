@@ -8,9 +8,9 @@ public class AuthSession {
 
     private final Long id;
     private final String email;
-    private final String role;
+    private final AdminRole role;
 
-    public AuthSession(Long id, String email, String role) {
+    public AuthSession(Long id, String email, AdminRole role) {
         this.id = id;
         this.email = email;
         this.role = role;

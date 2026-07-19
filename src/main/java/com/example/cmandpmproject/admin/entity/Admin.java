@@ -45,20 +45,22 @@ public class Admin extends BaseEntity {
     private String rejectionReason;
 
     // 생성자: 가입 신청 시 사용
+//    public Admin(String name, String email, String password, String phonenumber, AdminRole role) {
+//        this.name = name;
+//        this.email = email;
+//        this.password = password;
+//        this.phonenumber = phonenumber;
+//        this.role = role;
+//        this.status = AdminStatus.PENDING;
+//    }
+
+    // 생성자: 간단한 회원가입 (signup용)
     public Admin(String name, String email, String password, String phonenumber, AdminRole role) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.phonenumber = phonenumber;
         this.role = role;
-        this.status = AdminStatus.PENDING;
-    }
-
-    // 생성자: 간단한 회원가입 (signup용)
-    public Admin(String name, String email, String password) {
-        this.name = name;
-        this.email = email;
-        this.password = password;
         this.status = AdminStatus.PENDING;
     }
 
