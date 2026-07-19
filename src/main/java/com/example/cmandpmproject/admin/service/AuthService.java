@@ -39,11 +39,17 @@ public class AuthService {
             throw new IllegalArgumentException("이메일 또는 비밀번호를 잘못 입력하셨습니다.");
         }
 
-        if (admin.getStatus() != AdminStatus.ACTIVE) {
-            throw new IllegalArgumentException("로그인할 수 없는 계정입니다.");
-
-
-
+        switch (admin.getStatus()) {
+            case ACTIVE:
+                break;
+            case PENDING:
+                throw new IllegalStateException("계정이 승인 대기 상태입니다.");
+            case REJECTED:
+                throw new IllegalStateException("계정 신청이 거부되었습니다.");
+            case SUSPENDED:
+                throw new IllegalStateException("계정이 정지되었습니다.");
+            case INACTIVE:
+                throw new IllegalStateException("계정이 비활성화되었습니다.");
         }
         return new AuthSession(
                 admin.getId(),

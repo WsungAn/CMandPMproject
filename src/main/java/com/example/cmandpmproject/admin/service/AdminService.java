@@ -163,7 +163,9 @@ public class AdminService {
         Admin admin = new Admin(
                 request.getAdminName(),
                 request.getEmail(),
-                request.getPassword()
+                passwordEncoder.encode(request.getPassword()),
+                request.getPhone(),
+                request.getRole()
         );
 
         Admin savedAdmin = adminRepository.save(admin);
