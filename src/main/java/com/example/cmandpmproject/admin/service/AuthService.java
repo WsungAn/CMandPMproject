@@ -53,7 +53,7 @@ public class AuthService {
         return new AuthSession(
                 admin.getId(),
                 admin.getEmail(),
-                admin.getRole()
+                admin.getRole().getValue()
         );
 
     }
