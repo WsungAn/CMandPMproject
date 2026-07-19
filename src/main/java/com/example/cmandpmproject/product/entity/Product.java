@@ -2,7 +2,6 @@ package com.example.cmandpmproject.product.entity;
 
 import com.example.cmandpmproject.common.BaseEntity;
 import jakarta.persistence.*;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -44,7 +43,13 @@ public class Product extends BaseEntity {
         this.stock = stock;
         this.status = status;
     }
-
+    // 상품 정보 수정
+    public void update(String name, String category, Integer price, Integer stock) {
+        this.name = name;
+        this.category = category;
+        this.price = price;
+        this.stock = stock;
+    }
 
 
 }
